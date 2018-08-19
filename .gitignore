@@ -1,0 +1,4 @@
+debug*
+/vendor
+/_vendor*
+/dist

@@ -1,0 +1,23 @@
+items:
+  - itemName: SHIRTS
+    buy: 2
+    promos:
+      - itemName: SHIRTS
+        promoType: PRICE
+        promo: 45
+  - itemName: SHIRTS
+    buy: 3
+    promos:
+      - itemName: TIES
+        promoType: DISCOUNT
+        promo: 50
+  - itemName: TROUSERS
+    buy: 3
+    promos:
+      - itemName: BELT
+        promoType: DISCOUNT
+        promo: 15
+      - itemName: SHOES
+        promoType: DISCOUNT
+        promo: 15
+       
