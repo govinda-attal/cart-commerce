@@ -21,7 +21,8 @@ type handlerImpl struct {
 func (h *handlerImpl) UpdateCartItem(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 	vars := mux.Vars(r)
-	cartID := vars["cartId"]
+
+	cartID, existing := vars["cartId"]
 
 	var item eshop.Item
 	err := json.NewDecoder(r.Body).Decode(&item)
@@ -34,10 +35,16 @@ func (h *handlerImpl) UpdateCartItem(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 
-	w.Header().Set("App-CartID", cartID)
 	w.Header().Add("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(&status.Success)
+	var rsData interface{}
+	if !existing {
+		w.WriteHeader(http.StatusCreated)
+		rsData = eshop.IDWrap{ID: cartID}
+	} else {
+		rsData = status.Success
+	}
 
+	err = json.NewEncoder(w).Encode(&rsData)
 	if err != nil {
 		return status.ErrInternal.WithError(err)
 	}

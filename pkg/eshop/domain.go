@@ -31,8 +31,12 @@ type Item struct {
 type Cart struct {
 	ID          string    `json:"id"`
 	State       CartState `json:"state"`
-	Items       []*Item   `json:"items,omitempty"`	
+	Items       []*Item   `json:"items,omitempty"`
 	TotalAmount *Money    `json:"totalAmount,omitempty"`
+}
+
+type IDWrap struct {
+	ID string `json:"id"`
 }
 
 type CartItemsByTotalPrice []*Item

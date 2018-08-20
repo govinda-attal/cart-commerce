@@ -17,7 +17,7 @@ build:
 	mkdir dist/rules
 	mkdir dist/api
 	GOOS=linux GOARCH=amd64 go build -o ./dist/cartcom .
-	cp ./test/fixtures/app-config.yaml ./dist/config/app-config.yaml
+	cp ./test/fixtures/app-config.yml ./dist/config/app-config.yml
 	cp ./api/* ./dist/api/
 	cp ./rules/* ./dist/rules/
 
