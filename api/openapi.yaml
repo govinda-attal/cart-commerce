@@ -1,0 +1,213 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: eshop cart promotions
+  contact:
+    name: Govinda Attal
+    email: govinda.attal@gmail.com
+host: localhost:9080
+basePath: /1.0/
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /rules:
+    get:
+      description: returns promotional rules 
+      operationId: fetchRules      
+      responses:
+        '200':
+          description: promotion rules response
+          schema:
+            $ref: '#/definitions/promoRules'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/status'
+  /ecart:
+    post:
+      description: Creates a cart with given item and quantity
+      operationId: createCart
+      parameters:
+        - name: newCartRq
+          in: body
+          description: item and quantity to add in the cart
+          required: true
+          schema:
+            $ref: '#/definitions/newCartRq'
+      responses:
+        '200':
+          description: cart id response
+          schema:
+            $ref: '#/definitions/idWrap'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/status'
+  /ecart/{id}:
+    get:
+      description: fetch cart information
+      operationId: fetchCartDetails
+      parameters:
+        - name: id
+          in: path
+          description: ID of the cart
+          required: true
+          type: string
+      responses:
+        '200':
+          description: cart
+          schema:
+            $ref: '#/definitions/cart'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/status'
+    put:
+      description: Updates a cart with given item and quantity
+      operationId: updateCart
+      parameters:
+        - name: id
+          in: path
+          description: ID of the cart
+          required: true
+          type: string 
+        - name: updateCartRq
+          in: body
+          description: item and quantity to add in the cart
+          required: true
+          schema:
+            $ref: '#/definitions/updateCartRq'
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/status'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/status'
+    patch:
+      description: Updates a cart state
+      operationId: updateCartState
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: id
+          in: path
+          description: ID of the cart
+          required: true
+          type: string
+        - name: state
+          in: body
+          description: state of the cart
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/status'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/status'
+definitions:
+  idWrap:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+  status:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  promoRules:
+    type: object
+    properties:
+      items:
+        $ref: '#/definitions/promoItemRule'
+  promoItemRule:
+    type: array
+    items:
+      type: object
+      properties:
+        itemName:
+          type: string
+        buy:
+          type: string
+        promos:
+          type: array
+          items:
+            type: object
+            properties:
+              itemName:
+                type: string
+              promoType:
+                type: string
+              promo:
+                type: integer
+  updateCartRq:
+    type: object
+    required:
+      - itemName
+      - quantity
+    properties:
+      itemName:
+        type: string
+      quantity:
+        type: integer
+  newCartRq:
+    type: object
+    required:
+      - itemName
+      - quantity
+    properties:
+      itemName:
+        type: string
+      quantity:
+        type: integer
+  cart:
+    type: object
+    required:
+      - id
+      - state
+    properties:
+      id:
+        type: string
+      state:
+        type: string
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/cartItem'
+  cartItem:
+    type: object
+    properties:
+      itemName:
+        type: string
+      quantity:
+        type: integer
+      unitPrice:
+        type: number
+        format: float
+      price:
+        type: number
+        format: float
+      promoPrice:
+        type: number
+        format: float
+  

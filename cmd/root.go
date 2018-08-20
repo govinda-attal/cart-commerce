@@ -44,17 +44,20 @@ func startServer(cmd *cobra.Command, args []string) {
 
 	r := mux.NewRouter()
 
-	r.PathPrefix("/1.0/api/").Handler(http.StripPrefix("/api", http.FileServer(http.Dir("./api"))))
+	r.PathPrefix("/1.0/api/").Handler(http.StripPrefix("/1.0/api", http.FileServer(http.Dir("./api"))))
 	//r.PathPrefix("/1.0/rules/").Handler(http.StripPrefix("/rules", http.FileServer(http.Dir("./rules"))))
 
 	r.HandleFunc("/1.0/rules", httputil.WrapperHandler(ruleHandler.Fetch)).Methods("GET")
 
 	r.HandleFunc("/1.0/ecart/{cartId}", httputil.WrapperHandler(cartHandler.FetchCartItems)).Methods("GET")
-	r.HandleFunc("/1.0/ecart", httputil.WrapperHandler(cartHandler.UpdateCartItem)).Methods("PUT")
+	r.HandleFunc("/1.0/ecart", httputil.WrapperHandler(cartHandler.UpdateCartItem)).Methods("POST")
 	r.HandleFunc("/1.0/ecart/{cartId}", httputil.WrapperHandler(cartHandler.UpdateCartItem)).Methods("PUT")
 	r.HandleFunc("/1.0/ecart/{cartId}", httputil.WrapperHandler(cartHandler.UpdateCartState)).Methods("PATCH")
 
-	h := cors.Default().Handler(r)
+	h := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH"},
+	}).Handler(r)
 	n := negroni.New()
 	n.Use(negroni.NewLogger())
 	n.UseHandler(h)

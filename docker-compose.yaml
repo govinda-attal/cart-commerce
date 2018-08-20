@@ -36,7 +36,7 @@ services:
     image: swaggerapi/swagger-ui
     restart: always
     environment: 
-      - API_URL=http://localhost:9080/api/openapi.yaml
+      - API_URL=http://localhost:9080/1.0/api/openapi.yaml
     ports: 
       - 9090:8080
     depends_on:

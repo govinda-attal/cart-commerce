@@ -89,7 +89,7 @@ CREATE OR REPLACE FUNCTION updateCartState(
    argCartID text,
    argState text
 ) 
-RETURNS VOID AS $$
+RETURNS BOOLEAN AS $$
 DECLARE
     rec RECORD;
 BEGIN
@@ -103,5 +103,6 @@ BEGIN
       END CASE;
     END LOOP;
     UPDATE cart C SET state = argState::cart_state WHERE C.ID = argCartID::UUID;
+    RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
